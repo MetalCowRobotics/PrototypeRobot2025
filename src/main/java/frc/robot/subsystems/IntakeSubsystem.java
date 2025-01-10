@@ -63,30 +63,15 @@ public class IntakeSubsystem {
         System.out.println("Intake Enabled");
     }
 
-    // public void holdIntake(){
-    //     speed = holdSpeed;
-    //     System.out.println("Intake Hold");
-    // }
-
     public void stopIntake(){
         speed = 0;
         System.out.println("Intake Disabled");
     }
 
-    // public void toggleIntake(){
-    //     if (intakeEnabled){
-    //         intakeEnabled = false;
-    //     }else{
-    //         intakeEnabled = true;
-    //     }
-    // }
-
     public void startIntakeReverse(){
         speed = 1;
         intakeEnabled = true;
     }
-
-
 
     public double getSpeed(){
         return speed;
