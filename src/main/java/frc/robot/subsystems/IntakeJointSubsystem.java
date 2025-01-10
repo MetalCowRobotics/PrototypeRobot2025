@@ -119,6 +119,7 @@ public class IntakeJointSubsystem {
 
         pidController.setSetpoint(targetAngle);
 
+        // Started using atAngle() so that we can hold the intake up at a precise location without wobble
         if (!atAngle(targetAngle)) {
             speed = pidController.calculate(getCurrentAngle());
         }
