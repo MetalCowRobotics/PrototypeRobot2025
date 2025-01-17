@@ -3,6 +3,8 @@ package frc.robot.subsystems;
 import frc.robot.SwerveModule;
 import frc.robot.Constants;
 
+// TODO: adhere this code for these new gear ratios: https://wcproducts.com/collections/gearboxes/products/swerve-x2i
+
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
