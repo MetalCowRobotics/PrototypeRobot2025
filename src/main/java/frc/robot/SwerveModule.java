@@ -19,6 +19,8 @@ public class SwerveModule {
 
     private TalonFX mAngleMotor;
     private TalonFX mDriveMotor;
+
+
     private CANcoder angleEncoder;
 
     private final SimpleMotorFeedforward driveFeedForward = new SimpleMotorFeedforward(Constants.Swerve.driveKS, Constants.Swerve.driveKV, Constants.Swerve.driveKA);
@@ -29,6 +31,11 @@ public class SwerveModule {
 
     /* Angle Motor Control Requests */
     private final PositionVoltage anglePosition = new PositionVoltage(0);
+
+    double lastDrivePositon = 0;
+    double lastAnglePosition = 0;
+
+
 
     public SwerveModule(int moduleNumber, SwerveModuleConstants moduleConstants){
         this.moduleNumber = moduleNumber;
@@ -99,9 +106,19 @@ public class SwerveModule {
     }
 
     public SwerveModulePosition getPosition(){
+
+        // tunable constant to remove noise
+        double alphaConstant = 0.4;
+
+        double newDrivePosition = alphaConstant * lastDrivePositon + (1-alphaConstant) * mDriveMotor.getPosition().getValueAsDouble();
+        double newAnglePosition = alphaConstant * lastAnglePosition + (1-alphaConstant) * mAngleMotor.getPosition().getValueAsDouble();
+
+        lastDrivePositon = newDrivePosition;
+        lastAnglePosition = newAnglePosition;
+
         return new SwerveModulePosition(
-            Conversions.rotationsToMeters(mDriveMotor.getPosition().getValueAsDouble(), Constants.Swerve.wheelCircumference), 
-            Rotation2d.fromRotations(mAngleMotor.getPosition().getValueAsDouble())
+            Conversions.rotationsToMeters(newDrivePosition, Constants.Swerve.wheelCircumference), 
+            Rotation2d.fromRotations(newAnglePosition)
         );
     }
 }
