@@ -108,7 +108,7 @@ public class SwerveModule {
     public SwerveModulePosition getPosition(){
 
         // tunable constant to remove noise
-        double alphaConstant = 0.4;
+        double alphaConstant = 0.2;
 
         double newDrivePosition = alphaConstant * lastDrivePositon + (1-alphaConstant) * mDriveMotor.getPosition().getValueAsDouble();
         double newAnglePosition = alphaConstant * lastAnglePosition + (1-alphaConstant) * mAngleMotor.getPosition().getValueAsDouble();
