@@ -1,9 +1,13 @@
-
 // Copyright (c) FIRST and other WPILib contributors.
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
 package frc.robot;
+
+import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.config.PIDConstants;
+import com.pathplanner.lib.config.RobotConfig;
+import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -52,6 +56,7 @@ public class Robot extends TimedRobot {
     // private final JoystickButton armWrist = new JoystickButton(operator, XboxController.Button.kA.value);
 
     MCRCommand autoMission;
+    RobotConfig config;
 
     /* Subsystems */
     private final Swerve s_Swerve = new Swerve();
@@ -94,18 +99,40 @@ public class Robot extends TimedRobot {
     // IMPORTANT NOTE FOR AUTOS IF YOU MAKE AN AUTO THAT BREAKS IT IS ON THE ROBO RIO UNTELL YOU REFORMAT IT 
     // SO EVAN IF YOU FIX THE CODE IT WONT WORK TELL YOU REFORMAT THE ROBO RIO
     SmartDashboard.putNumber("Shooter Far Target", Constants.JointConstants.shooterFar);
-  //   AutoBuilder.configureHolonomic(
-  //           s_Swerve::getPose,
-  //           s_Swerve::resetPose,
-  //           s_Swerve::getRobotRelativeSpeeds,
-  //           s_Swerve::driveRobotRelative,
-  //           new HolonomicPathFollowerConfig(
-  //               new PIDConstants(0.0, 0.0, 0.0),
-  //               new PIDConstants(0.0, 0.0, 0.1),
-  //               3,
-  //               0.4,
-  //               new ReplanningConfig(true,true)
-  //           ),
+    try {
+        config = RobotConfig.fromGUISettings();
+    } catch (Exception e) {
+        // Handle exception as needed
+        e.printStackTrace(); // Provide a default configuration in case of an error
+    }
+
+    // Configure AutoBuilder last
+    AutoBuilder.configure(
+            s_Swerve::getPose, // Robot pose supplier
+            s_Swerve::resetPose, // Method to reset odometry (will be called if your auto has a starting pose)
+            s_Swerve::getRobotRelativeSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
+            (speeds, feedforwards) -> s_Swerve.driveRobotRelative(speeds), // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds. Also optionally outputs individual module feedforwards
+            new PPHolonomicDriveController( // PPHolonomicController is the built in path following controller for holonomic drive trains
+                    new PIDConstants(5.0, 0.0, 0.0), // Translation PID constants
+                    new PIDConstants(5.0, 0.0, 0.0) // Rotation PID constants
+            ),config,// The robot configuration
+            () -> {
+                // Boolean supplier that controls when the path will be mirrored for the red alliance
+                return false; // Replace with actual condition if needed
+            }
+    );
+    // AutoBuilder.configureHolonomic(
+    //         s_Swerve::getPose,
+    //         s_Swerve::resetPose,
+    //         s_Swerve::getRobotRelativeSpeeds,
+    //         s_Swerve::driveRobotRelative,
+    //         new HolonomicPathFollowerConfig(
+    //             new PIDConstants(0.0, 0.0, 0.0),
+    //             new PIDConstants(0.0, 0.0, 0.1),
+    //             3,
+    //             0.4,
+    //             new ReplanningConfig(true,true)
+    //         ),
   //           () -> {
   //               var alliance = DriverStation.getAlliance();
   //               return alliance.isPresent() && alliance.get() == DriverStation.Alliance.Red;
@@ -270,4 +297,3 @@ public class Robot extends TimedRobot {
     //     return operator.getRightBumper();
     //   }
     }
-  
