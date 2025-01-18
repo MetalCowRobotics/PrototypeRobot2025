@@ -99,13 +99,11 @@ public class Robot extends TimedRobot {
     // IMPORTANT NOTE FOR AUTOS IF YOU MAKE AN AUTO THAT BREAKS IT IS ON THE ROBO RIO UNTELL YOU REFORMAT IT 
     // SO EVAN IF YOU FIX THE CODE IT WONT WORK TELL YOU REFORMAT THE ROBO RIO
     SmartDashboard.putNumber("Shooter Far Target", Constants.JointConstants.shooterFar);
-    try {
-        config = RobotConfig.fromGUISettings();
-    } catch (Exception e) {
-        // Handle exception as needed
-        e.printStackTrace(); // Provide a default configuration in case of an error
-    }
 
+
+
+    try {
+      config = RobotConfig.fromGUISettings();
     // Configure AutoBuilder last
     AutoBuilder.configure(
             s_Swerve::getPose, // Robot pose supplier
@@ -121,6 +119,17 @@ public class Robot extends TimedRobot {
                 return false; // Replace with actual condition if needed
             }
     );
+
+    autoChooser = AutoBuilder.buildAutoChooser("Amp");
+    SmartDashboard.putData("Auto Chooser", autoChooser);
+  } catch (Exception e) {
+    // Handle exception as needed
+    e.printStackTrace();
+    DriverStation.reportError("Failed to load PathPlanner config and configure AutoBuilder", e.getStackTrace());
+    config = null; // Provide a default configuration in case of an error
+}
+
+   
     // AutoBuilder.configureHolonomic(
     //         s_Swerve::getPose,
     //         s_Swerve::resetPose,
