@@ -102,32 +102,33 @@ public class Robot extends TimedRobot {
 
 
 
-    try {
-      config = RobotConfig.fromGUISettings();
-    // Configure AutoBuilder last
-    AutoBuilder.configure(
-            s_Swerve::getPose, // Robot pose supplier
-            s_Swerve::resetPose, // Method to reset odometry (will be called if your auto has a starting pose)
-            s_Swerve::getRobotRelativeSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
-            (speeds, feedforwards) -> s_Swerve.driveRobotRelative(speeds), // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds. Also optionally outputs individual module feedforwards
-            new PPHolonomicDriveController( // PPHolonomicController is the built in path following controller for holonomic drive trains
-                    new PIDConstants(5.0, 0.0, 0.0), // Translation PID constants
-                    new PIDConstants(5.0, 0.0, 0.0) // Rotation PID constants
-            ),config,// The robot configuration
-            () -> {
-                // Boolean supplier that controls when the path will be mirrored for the red alliance
-                return false; // Replace with actual condition if needed
-            }
-    );
+//     try {
+//       config = RobotConfig.fromGUISettings();
+//     // Configure AutoBuilder last
+//     AutoBuilder.configure(
+//             s_Swerve::getPose, // Robot pose supplier
+//             s_Swerve::resetPose, // Method to reset odometry (will be called if your auto has a starting pose)
+//             s_Swerve::getRobotRelativeSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
+//             (speeds, feedforwards) -> s_Swerve.driveRobotRelative(speeds), // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds. Also optionally outputs individual module feedforwards
+//             new PPHolonomicDriveController( // PPHolonomicController is the built in path following controller for holonomic drive trains
+//                     new PIDConstants(5.0, 0.0, 0.0), // Translation PID constants
+//                     new PIDConstants(5.0, 0.0, 0.0) // Rotation PID constants
+//             ),config,// The robot configuration
+//             () -> {
+//                 var alliance = DriverStation.getAlliance();
+//                 return alliance.isPresent() && alliance.get() == DriverStation.Alliance.Red;
+//             },
+//             s_Swerve
+//     );
 
-    autoChooser = AutoBuilder.buildAutoChooser("Amp");
-    SmartDashboard.putData("Auto Chooser", autoChooser);
-  } catch (Exception e) {
-    // Handle exception as needed
-    e.printStackTrace();
-    DriverStation.reportError("Failed to load PathPlanner config and configure AutoBuilder", e.getStackTrace());
-    config = null; // Provide a default configuration in case of an error
-}
+//     autoChooser = AutoBuilder.buildAutoChooser("Amp");
+//     SmartDashboard.putData("Auto Chooser", autoChooser);
+//   } catch (Exception e) {
+//     // Handle exception as needed
+//     e.printStackTrace();
+//     DriverStation.reportError("Failed to load PathPlanner config and configure AutoBuilder", e.getStackTrace());
+//     config = null; // Provide a default configuration in case of an error
+// }
 
    
     // AutoBuilder.configureHolonomic(
@@ -294,7 +295,7 @@ public class Robot extends TimedRobot {
   }
 
     public void callPeriodic(){
-      m_NoteTransitSubsystem.periodic();
+      // m_NoteTransitSubsystem.periodic();
       // m_IntakeSubsystem.periodic();
       // m_IntakeJointSubsystem.periodic();
     }
