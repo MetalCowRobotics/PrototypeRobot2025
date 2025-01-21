@@ -49,8 +49,7 @@ public class Robot extends TimedRobot {
     /* Operator Controls */
     private final Trigger intakePosition = new Trigger(() -> operator.getRawAxis(XboxController.Axis.kRightTrigger.value) > 0.8);
     private final Trigger shooterPosition = new Trigger(() -> operator.getRawAxis(XboxController.Axis.kLeftTrigger.value) > 0.8);
-    public boolean intakeStatus = false;
-    
+    public boolean intakeStatus = false;    
     // private final JoystickButton intakeButton = new JoystickButton(operator, XboxController.Button.kB.value);
     // private final Trigger shooterTrigger = new Trigger(() -> operator.getRawAxis(XboxController.Axis.kRightTrigger.value) > 0.8);
     // private final JoystickButton armWrist = new JoystickButton(operator, XboxController.Button.kA.value);
@@ -100,35 +99,9 @@ public class Robot extends TimedRobot {
     // SO EVAN IF YOU FIX THE CODE IT WONT WORK TELL YOU REFORMAT THE ROBO RIO
     SmartDashboard.putNumber("Shooter Far Target", Constants.JointConstants.shooterFar);
 
+  
 
-
-//     try {
-//       config = RobotConfig.fromGUISettings();
-//     // Configure AutoBuilder last
-//     AutoBuilder.configure(
-//             s_Swerve::getPose, // Robot pose supplier
-//             s_Swerve::resetPose, // Method to reset odometry (will be called if your auto has a starting pose)
-//             s_Swerve::getRobotRelativeSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
-//             (speeds, feedforwards) -> s_Swerve.driveRobotRelative(speeds), // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds. Also optionally outputs individual module feedforwards
-//             new PPHolonomicDriveController( // PPHolonomicController is the built in path following controller for holonomic drive trains
-//                     new PIDConstants(5.0, 0.0, 0.0), // Translation PID constants
-//                     new PIDConstants(5.0, 0.0, 0.0) // Rotation PID constants
-//             ),config,// The robot configuration
-//             () -> {
-//                 var alliance = DriverStation.getAlliance();
-//                 return alliance.isPresent() && alliance.get() == DriverStation.Alliance.Red;
-//             },
-//             s_Swerve
-//     );
-
-//     autoChooser = AutoBuilder.buildAutoChooser("Amp");
-//     SmartDashboard.putData("Auto Chooser", autoChooser);
-//   } catch (Exception e) {
-//     // Handle exception as needed
-//     e.printStackTrace();
-//     DriverStation.reportError("Failed to load PathPlanner config and configure AutoBuilder", e.getStackTrace());
-//     config = null; // Provide a default configuration in case of an error
-// }
+// OLD AUTO BUILDER
 
    
     // AutoBuilder.configureHolonomic(
@@ -167,6 +140,41 @@ public class Robot extends TimedRobot {
   //  // autoChooser =  AutoBuilder.buildAutoChooser("Red Left Three Note Auto");
 
   // SmartDashboard.putData("Auto Chooser", autoChooser);
+
+  try{
+    config = RobotConfig.fromGUISettings();
+  } catch (Exception e) {
+    // Handle exception as needed
+    e.printStackTrace();
+  }
+
+  // Configure AutoBuilder last
+  AutoBuilder.configure(
+          s_Swerve::getPose, // Robot pose supplier
+          s_Swerve::resetPose, // Method to reset odometry (will be called if your auto has a starting pose)
+          s_Swerve::getRobotRelativeSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
+          (speeds, feedforwards) -> s_Swerve.driveRobotRelative(speeds), // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds. Also optionally outputs individual module feedforwards
+          new PPHolonomicDriveController( // PPHolonomicController is the built in path following controller for holonomic drive trains
+                  new PIDConstants(5.0, 0.0, 0.0), // Translation PID constants
+                  new PIDConstants(5.0, 0.0, 0.0) // Rotation PID constants
+          ),
+          config, // The robot configuration
+          () -> {
+            // Boolean supplier that controls when the path will be mirrored for the red alliance
+            // This will flip the path being followed to the red side of the field.
+            // THE ORIGIN WILL REMAIN ON THE BLUE SIDE
+
+            var alliance = DriverStation.getAlliance();
+            if (alliance.isPresent()) {
+              return alliance.get() == DriverStation.Alliance.Red;
+            }
+            return false;
+          },
+          s_Swerve // Reference to this subsystem to set requirements
+  );
+
+    autoChooser = AutoBuilder.buildAutoChooser("AutoTest");
+    SmartDashboard.putData("Auto Chooser", autoChooser);
   }
 
   @Override
