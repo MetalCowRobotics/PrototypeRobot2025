@@ -7,7 +7,9 @@ import frc.robot.LimelightHelpers;
 // TODO: adhere this code for these new gear ratios: https://wcproducts.com/collections/gearboxes/products/swerve-x2i
 
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import com.pathplanner.lib.config.PIDConstants;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
+import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
@@ -18,17 +20,24 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.filter.SlewRateLimiter;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 import com.ctre.phoenix6.configs.Pigeon2Configuration;
 import com.ctre.phoenix6.hardware.Pigeon2;
+import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.config.RobotConfig;
+import com.pathplanner.lib.controllers.PPHolonomicDriveController;
+import com.pathplanner.lib.util.PathPlannerLogging;
 
 public class Swerve implements Subsystem{
     public SwerveDrivePoseEstimator swervePoseEstimator;
     public SwerveModule[] mSwerveMods;
     public Pigeon2 gyro;
+    private Field2d field = new Field2d();
 
     private final double accelerationTime = 0.3;
     private double speedMultiplier = 1;
@@ -45,6 +54,7 @@ public class Swerve implements Subsystem{
     private PIDController thetaController2 = new PIDController(0.0002, 0, 0);
 
     private boolean positionReached = false;
+    
 
     public Swerve() {
         
@@ -66,7 +76,43 @@ public class Swerve implements Subsystem{
         };
 
         swervePoseEstimator = new SwerveDrivePoseEstimator(Constants.Swerve.swerveKinematics, getGyroYaw(), getModulePositions(), new Pose2d());
+
+        try{
+            RobotConfig config = RobotConfig.fromGUISettings();
+
+      // Configure AutoBuilder
+      AutoBuilder.configure(
+        this::getPose, 
+        this::resetPose, 
+        this::getRobotRelativeSpeeds, 
+        this::driveRobotRelative, 
+        new PPHolonomicDriveController(
+                new PIDConstants(0.0, 0.0, 0.0),
+                new PIDConstants(0.0, 0.0, 0.1)
+        ),
+        config,
+        () -> {
+            // Boolean supplier that controls when the path will be mirrored for the red alliance
+            // This will flip the path being followed to the red side of the field.
+            // THE ORIGIN WILL REMAIN ON THE BLUE SIDE
+
+            var alliance = DriverStation.getAlliance();
+            if (alliance.isPresent()) {
+                return alliance.get() == DriverStation.Alliance.Red;
+            }
+            return false;
+        },
+        this
+      );
+    }catch(Exception e){
+      DriverStation.reportError("Failed to load PathPlanner config and configure AutoBuilder", e.getStackTrace());
     }
+
+    // Set up custom logging to add the current path to a field 2d widget
+    PathPlannerLogging.setLogActivePathCallback((poses) -> field.getObject("path").setPoses(poses));
+
+    SmartDashboard.putData("Field", field);
+  }
 
     public void setDriveOffsets(){
         mSwerveMods[0].setAngleOffset();
@@ -180,6 +226,7 @@ public class Swerve implements Subsystem{
 
     public void periodicValues(){
         swervePoseEstimator.update(getGyroYaw(), getModulePositions());
+        field.setRobotPose(getPose());
 
         
     boolean useMegaTag2 = true; //set to false to use MegaTag1
@@ -256,6 +303,8 @@ public class Swerve implements Subsystem{
 
     public void periodic(DoubleSupplier translationSup, DoubleSupplier strafeSup, DoubleSupplier rotationSup, BooleanSupplier robotCentricSup) {
         teleopSwerve(translationSup, strafeSup, rotationSup, robotCentricSup);
+        periodicValues();
+        
         SmartDashboard.putNumber("X Pose", getPose().getX());
         SmartDashboard.putNumber("Y Pose", getPose().getY());
         SmartDashboard.putNumber("Drive Angle", getPose().getRotation().getDegrees());

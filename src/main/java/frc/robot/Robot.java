@@ -21,6 +21,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+
 import frc.lib14.MCRCommand;
 import frc.robot.subsystems.*;
 /*
@@ -32,6 +33,9 @@ import frc.robot.subsystems.*;
 
 public class Robot extends TimedRobot {
     public static final CTREConfigs ctreConfigs = new CTREConfigs();
+    private Command m_autonomousCommand;
+
+    private RobotContainer m_robotContainer;
 
     /* Controllers */
     private final Joystick driver = new Joystick(0);
@@ -49,21 +53,18 @@ public class Robot extends TimedRobot {
     /* Operator Controls */
     private final Trigger intakePosition = new Trigger(() -> operator.getRawAxis(XboxController.Axis.kRightTrigger.value) > 0.8);
     private final Trigger shooterPosition = new Trigger(() -> operator.getRawAxis(XboxController.Axis.kLeftTrigger.value) > 0.8);
-    public boolean intakeStatus = false;
-    
+    public boolean intakeStatus = false;    
     // private final JoystickButton intakeButton = new JoystickButton(operator, XboxController.Button.kB.value);
     // private final Trigger shooterTrigger = new Trigger(() -> operator.getRawAxis(XboxController.Axis.kRightTrigger.value) > 0.8);
     // private final JoystickButton armWrist = new JoystickButton(operator, XboxController.Button.kA.value);
 
     MCRCommand autoMission;
-    RobotConfig config;
 
     /* Subsystems */
-    private final Swerve s_Swerve = new Swerve();
+    // private final Swerve s_Swerve = new Swerve();
     private final IntakeSubsystem m_IntakeSubsystem = IntakeSubsystem.getInstance();
     private final NoteTransitSubsystem m_NoteTransitSubsystem = NoteTransitSubsystem.getInstance();
-    private final IntakeJointSubsystem m_IntakeJointSubsystem = IntakeJointSubsystem.getInstance();
-    
+
     /* autos */
     MCRCommand twoNoteCenter;
 
@@ -73,95 +74,19 @@ public class Robot extends TimedRobot {
    * This function is run when the robot is first started up and should be used for any
    * initialization code.
    */
-
+//38 container
+//84 swerve
  
   @Override
   public void robotInit() {
-    //              ||||||||               ||||||||               ||||||||   
-    //              ||||||||               ||||||||               ||||||||
-    //              ||||||||               ||||||||               ||||||||
-    //              ||||||||               ||||||||               ||||||||
-    //              ||||||||               ||||||||               ||||||||
-    //              ||||||||               ||||||||               ||||||||
-    //              ||||||||               ||||||||               ||||||||
-    //              ||||||||               ||||||||               ||||||||
-    //              ||||||||               ||||||||               ||||||||
-    //              ||||||||               ||||||||               ||||||||
-    //         \\\\\\||||||//////     \\\\\\||||||//////     \\\\\\||||||//////
-    //          \\\\\\||||//////       \\\\\\||||//////       \\\\\\||||//////
-    //           \\\\\\||//////         \\\\\\||//////         \\\\\\||//////  
-    //            \\\\\\//////           \\\\\\//////           \\\\\\//////
-    //             \\\\\/////             \\\\\/////             \\\\\/////
-    //              \\\\////               \\\\////               \\\\////
-    //               \\\///                 \\\///                 \\\/// 
-    //                \\//                   \\//                   \\//
-    //                 \/                     \/                     \/
-    // IMPORTANT NOTE FOR AUTOS IF YOU MAKE AN AUTO THAT BREAKS IT IS ON THE ROBO RIO UNTELL YOU REFORMAT IT 
-    // SO EVAN IF YOU FIX THE CODE IT WONT WORK TELL YOU REFORMAT THE ROBO RIO
-    SmartDashboard.putNumber("Shooter Far Target", Constants.JointConstants.shooterFar);
-    try {
-        config = RobotConfig.fromGUISettings();
-    } catch (Exception e) {
-        // Handle exception as needed
-        e.printStackTrace(); // Provide a default configuration in case of an error
-    }
+    m_robotContainer = new RobotContainer();
 
-    // Configure AutoBuilder last
-    AutoBuilder.configure(
-            s_Swerve::getPose, // Robot pose supplier
-            s_Swerve::resetPose, // Method to reset odometry (will be called if your auto has a starting pose)
-            s_Swerve::getRobotRelativeSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
-            (speeds, feedforwards) -> s_Swerve.driveRobotRelative(speeds), // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds. Also optionally outputs individual module feedforwards
-            new PPHolonomicDriveController( // PPHolonomicController is the built in path following controller for holonomic drive trains
-                    new PIDConstants(5.0, 0.0, 0.0), // Translation PID constants
-                    new PIDConstants(5.0, 0.0, 0.0) // Rotation PID constants
-            ),config,// The robot configuration
-            () -> {
-                // Boolean supplier that controls when the path will be mirrored for the red alliance
-                return false; // Replace with actual condition if needed
-            }
-    );
-    // AutoBuilder.configureHolonomic(
-    //         s_Swerve::getPose,
-    //         s_Swerve::resetPose,
-    //         s_Swerve::getRobotRelativeSpeeds,
-    //         s_Swerve::driveRobotRelative,
-    //         new HolonomicPathFollowerConfig(
-    //             new PIDConstants(0.0, 0.0, 0.0),
-    //             new PIDConstants(0.0, 0.0, 0.1),
-    //             3,
-    //             0.4,
-    //             new ReplanningConfig(true,true)
-    //         ),
-  //           () -> {
-  //               var alliance = DriverStation.getAlliance();
-  //               return alliance.isPresent() && alliance.get() == DriverStation.Alliance.Red;
-  //           },
-  //            s_Swerve
-  //       );
-  //         NamedCommands.registerCommand("Shoot far Pos", new ArmToAngles2("speakerFromNotePosition"));
-  //         // NamedCommands.registerCommand("Shoot mid Pos", new ArmToAngles2("speakerMidPosition"));
-  //         NamedCommands.registerCommand("rest Pos", new ArmToAngles2("restPosition"));
-  //         NamedCommands.registerCommand("Shoot Pos", new ArmToAngles2("speakerPosition"));
-  //         NamedCommands.registerCommand("Intake Pos", new ArmToAngles2("pickupPosition"));
-  //         NamedCommands.registerCommand("Toggle Shooter", new InstantCommand(() -> m_NoteTransitSubsystem.toggleShooter()));
-  //         // NamedCommands.registerCommand("Toggle Intake", new InstantCommand(() -> m_NoteTransitSubsystem.toggleIntake()));
-  //         // NamedCommands.registerCommand("Intake Feed", new InstantCommand(() -> m_NoteTransitSubsystem.quickOuttake()));
-  //         // NamedCommands.registerCommand("Intake Stop", new InstantCommand(() -> m_NoteTransitSubsystem.disableIntake()));
-  //         NamedCommands.registerCommand("Enable Intake", new InstantCommand(() -> m_NoteTransitSubsystem.enableIntake()));
-  //    // Build an auto chooser. This will use Commands.none() as the default option.
-  //   autoChooser = AutoBuilder.buildAutoChooser("Amp");
-
-  // //   // Another option that allows you to specify the default auto by its name
-  //   // autoChooser = AutoBuilder.buildAutoChooser("My Default Auto");
-  //  // autoChooser =  AutoBuilder.buildAutoChooser("Red Left Three Note Auto");
-
-  // SmartDashboard.putData("Auto Chooser", autoChooser);
   }
 
   @Override
   public void robotPeriodic() {
-    s_Swerve.periodicValues();
+    CommandScheduler.getInstance().run();
+    // s_Swerve.periodicValues();
   }
 
   /** This function is called once each time the robot enters Disabled mode. */
@@ -175,6 +100,13 @@ public class Robot extends TimedRobot {
   @Override
   
   public void autonomousInit() {
+    m_autonomousCommand = m_robotContainer.getAutonomousCommand();
+    // s_Swerve.zeroGyro();
+
+    // schedule the autonomous command (example)
+    if (m_autonomousCommand != null) {
+      m_autonomousCommand.schedule();
+    }
   }
 
   /** This function is called periodically during autonomous. */
@@ -184,15 +116,12 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopInit() {
-    //s_Swerve.setDriveOffsets();
-    CommandScheduler.getInstance().cancelAll();
-    // m_NoteTransitSubsystem.stopShooter();
-    // m_NoteTransitSubsystem.setRestPosition();
-    
-    s_Swerve.zeroGyro();
-    if (DriverStation.getAlliance().equals(Alliance.Red)) {
-      s_Swerve.setHeading(new Rotation2d(Math.toDegrees(Math.PI)));
+
+    if (m_autonomousCommand != null) {
+      m_autonomousCommand.cancel();
     }
+ 
+    // s_Swerve.zeroGyro();
   }
 
   /** This function is called periodically during operator control. */
@@ -200,14 +129,13 @@ public class Robot extends TimedRobot {
   public void teleopPeriodic() {
     // System.out.println(s_Swerve.getTotalDist());
 
-    configureButtonBindings();
-    callPeriodic();
-    s_Swerve.periodic(
-      () -> -driver.getRawAxis(translationAxis), 
-      () -> -driver.getRawAxis(strafeAxis), 
-      () -> -driver.getRawAxis(rotationAxis), 
-      () -> false /* Never Robot-Oriented */
-    );
+    // callPeriodic();
+    // s_Swerve.periodic(
+    //   () -> -driver.getRawAxis(translationAxis), 
+    //   () -> -driver.getRawAxis(strafeAxis), 
+    //   () -> -driver.getRawAxis(rotationAxis), 
+    //   () -> false /* Never Robot-Oriented */
+    // );
   }
 
   @Override
@@ -215,85 +143,10 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during test mode. */
   @Override
   public void testPeriodic() {}
-
-  private void configureButtonBindings() {
-    /* Driver Related */
-    if (zeroGyro.getAsBoolean()) {
-      s_Swerve.zeroGyro();
-    }
-
-    // if (crawl.getAsBoolean()) {
-    //   s_Swerve.setCrawl();
-    // }
-    // else if (sprint.getAsBoolean()) {
-    //   s_Swerve.setSprint();
-    // }
-    
-      s_Swerve.setBase();
-
-    /* Operator Related */
-    if (operator.getAButtonReleased()) {
-      m_NoteTransitSubsystem.setRestPosition();
-      
-      // if Button A is released, the arm and wrist will go to the rest position
-    }
-
-     if (operator.getBButtonReleased()) {
-      // m_NoteTransitSubsystem.setStageShootingPosition();
-      // if Button X is released, the arm and wrist will go to the climb final position
-    }
-
-    if (operator.getYButton()){
-      // m_NoteTransitSubsystem.setVariableAngle(s_Swerve.getTotalDist());
-      
-    }
-
-    if (operator.getRightTriggerAxis() > 0.5){
-      m_NoteTransitSubsystem.setPickupPosition();
-    }
+  
 
 
-    if (operator.getLeftBumperButtonReleased()) {
-      m_IntakeSubsystem.stopIntake();
-      System.out.println("Left Bumper Released");
-      System.out.println(m_IntakeSubsystem.getSpeed());
-      // if the left bumper is released, the arm and wrist will go to the speaker position
-    }
+  public void callPeriodic(){
 
-    if (operator.getRightBumperButtonReleased()) {
-      m_IntakeSubsystem.startIntake();;
-      System.out.println("Right Bumper Released");
-      System.out.println(m_IntakeSubsystem.getSpeed());
-    }
-    else if (operator.getBackButton()) {
-      // m_NoteTransitSubsystem.quickOuttake();
-    }
-    // else {
-    //   m_NoteTransitSubsystem.disableIntake();
-    // }
-
-    if (operator.getStartButtonReleased()) {
-      // m_NoteTransitSubsystem.setAMPPosition();
-    }
-
-    if (shooterPosition.getAsBoolean()) {
-      // m_NoteTransitSubsystem.setSpeakerPosition();
-    }
-    if (intakePosition.getAsBoolean()) {
-      // m_NoteTransitSubsystem.setPickupPosition();
-    }
   }
-
-    public void callPeriodic(){
-      m_NoteTransitSubsystem.periodic();
-      // m_IntakeSubsystem.periodic();
-      // m_IntakeJointSubsystem.periodic();
-    }
-
-    // public boolean intakeToggle(){
-    //   if(m_NoteTransitSubsystem.getShootingState()){
-    //     return operator.getRightBumper();  
-    //   }else{
-    //     return operator.getRightBumper();
-    //   }
-    }
+}
