@@ -5,15 +5,9 @@
     "data": {
       "commands": [
         {
-          "type": "parallel",
-          "data": {
-            "commands": []
-          }
-        },
-        {
           "type": "path",
           "data": {
-            "pathName": "S1 Coral Drop"
+            "pathName": "OneCoralToI&J"
           }
         }
       ]
