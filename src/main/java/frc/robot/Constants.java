@@ -25,16 +25,16 @@ public final class Constants {
             public static final double wheelDiameter = Units.inchesToMeters(4.0);
             public static final double wheelCircumference = wheelDiameter * Math.PI;
             public static final double driveGearRatio = 7.85; // WCP X1 12T ratio
-            public static final double angleGearRatio = 12.8; // WCP steer ratio remains the same
+            public static final double angleGearRatio = 12.1; // WCP steer ratio remains the same
             
-            public static final InvertedValue angleMotorInvert = InvertedValue.Clockwise_Positive;
+            public static final InvertedValue angleMotorInvert = InvertedValue.CounterClockwise_Positive;
             public static final InvertedValue driveMotorInvert = InvertedValue.CounterClockwise_Positive;
             public static final SensorDirectionValue cancoderInvert = SensorDirectionValue.CounterClockwise_Positive;
         }
 
         /* Drivetrain Constants */
-        public static final double trackWidth = Units.inchesToMeters(19.50); // Adjust for your robot
-        public static final double wheelBase = Units.inchesToMeters(21.5); // Adjust for your robot
+        public static final double trackWidth = Units.inchesToMeters(21); // Adjust for your robot
+        public static final double wheelBase = Units.inchesToMeters(23); // Adjust for your robot
         public static final double wheelCircumference = ModuleConstants.wheelCircumference;
 
         /* Swerve Kinematics 
@@ -73,7 +73,7 @@ public final class Constants {
         public static final double closedLoopRamp = 0.0;
 
         /* Angle Motor PID Values */
-        public static final double angleKP = 80.0;
+        public static final double angleKP = 20.0;
         public static final double angleKI = 0.0;
         public static final double angleKD = 0.0;
 
