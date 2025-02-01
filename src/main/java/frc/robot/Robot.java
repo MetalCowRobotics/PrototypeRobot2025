@@ -126,6 +126,7 @@ public class Robot extends TimedRobot {
     // s_Swerve.zeroGyro();
   }
 
+  
   /** This function is called periodically during operator control. */
   @Override
   public void teleopPeriodic() {
@@ -134,8 +135,13 @@ public class Robot extends TimedRobot {
           () -> -driver.getRawAxis(translationAxis), 
           () -> -driver.getRawAxis(strafeAxis), 
           () -> -driver.getRawAxis(rotationAxis), 
-          () -> true
+          () -> false  // Set to false for field-oriented control
       );
+      
+      // Add zero gyro button functionality
+      if (zeroGyro.getAsBoolean()) {
+        s_Swerve.zeroGyro();
+      }
     } catch (Exception e) {
       System.out.println("Error in teleopPeriodic: " + e.getMessage());
       e.printStackTrace();

@@ -128,23 +128,26 @@ public class Swerve implements Subsystem{
     public void drive(Translation2d translation, double rotation, boolean fieldRelative, boolean isOpenLoop) {
         double xSpeed = m_xSlewRateLimiter.calculate(translation.getX() * speedMultiplier);
         double ySpeed = m_ySlewRateLimiter.calculate(translation.getY() * speedMultiplier);
+        
         SmartDashboard.putNumber("xTarget", translation.getX());
         SmartDashboard.putNumber("yTarget", translation.getY());
         SmartDashboard.putNumber("RotationTarget", rotation);
+        
         SwerveModuleState[] swerveModuleStates =
             Constants.Swerve.swerveKinematics.toSwerveModuleStates(
-                !fieldRelative ? ChassisSpeeds.fromFieldRelativeSpeeds(
-                                    xSpeed, 
-                                    ySpeed, 
-                                    -rotation, 
-                                    getHeading()
-                                )
-                                : new ChassisSpeeds(
-                                    xSpeed, 
-                                    ySpeed, 
-                                    -rotation
-                                )
+                fieldRelative ? ChassisSpeeds.fromFieldRelativeSpeeds(
+                    xSpeed,
+                    ySpeed,
+                    rotation,
+                    getGyroYaw()
+                )
+                : new ChassisSpeeds(
+                    xSpeed,
+                    ySpeed,
+                    rotation
+                )
             );
+        
         SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, desiredSpeed);
 
         for(SwerveModule mod : mSwerveMods){
@@ -312,5 +315,24 @@ public class Swerve implements Subsystem{
         SmartDashboard.putNumber("X Pose", getPose().getX());
         SmartDashboard.putNumber("Y Pose", getPose().getY());
         SmartDashboard.putNumber("Drive Angle", getPose().getRotation().getDegrees());
+    }
+
+    @Override
+    public void periodic() {
+        // Update odometry
+        swervePoseEstimator.update(getGyroYaw(), getModulePositions());
+        
+        // Update field visualization
+        field.setRobotPose(getPose());
+        
+        // Debug values
+        SmartDashboard.putNumber("Robot Heading", getGyroYaw().getDegrees());
+        SmartDashboard.putNumber("Robot X", getPose().getX());
+        SmartDashboard.putNumber("Robot Y", getPose().getY());
+        
+        for(SwerveModule mod : mSwerveMods){
+            SmartDashboard.putNumber("Mod " + mod.moduleNumber + " Angle", mod.getPosition().angle.getDegrees());
+            SmartDashboard.putNumber("Mod " + mod.moduleNumber + " Velocity", mod.getState().speedMetersPerSecond);    
+        }
     }
 }
