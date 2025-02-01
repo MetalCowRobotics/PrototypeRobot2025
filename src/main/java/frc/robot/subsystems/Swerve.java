@@ -125,7 +125,7 @@ public class Swerve implements Subsystem{
         double xSpeed = m_xSlewRateLimiter.calculate(translation.getX() * speedMultiplier);
         double ySpeed = m_ySlewRateLimiter.calculate(translation.getY() * speedMultiplier);
         SmartDashboard.putNumber("xTarget", translation.getX());
-        SmartDashboard.putNumber("yTarget", translation.getX());
+        SmartDashboard.putNumber("yTarget", translation.getY());
         SmartDashboard.putNumber("RotationTarget", rotation);
         SwerveModuleState[] swerveModuleStates =
             Constants.Swerve.swerveKinematics.toSwerveModuleStates(
