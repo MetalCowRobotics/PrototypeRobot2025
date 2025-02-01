@@ -62,8 +62,6 @@ public class Robot extends TimedRobot {
 
     /* Subsystems */
     // private final Swerve s_Swerve = new Swerve();
-    private final IntakeSubsystem m_IntakeSubsystem = IntakeSubsystem.getInstance();
-    private final NoteTransitSubsystem m_NoteTransitSubsystem = NoteTransitSubsystem.getInstance();
 
     /* autos */
     MCRCommand twoNoteCenter;
