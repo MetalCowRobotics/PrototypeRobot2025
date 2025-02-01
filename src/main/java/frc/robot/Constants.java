@@ -25,7 +25,7 @@ public final class Constants {
             public static final double wheelDiameter = Units.inchesToMeters(4.0);
             public static final double wheelCircumference = wheelDiameter * Math.PI;
             public static final double driveGearRatio = 7.85; // WCP X1 12T ratio
-            public static final double angleGearRatio = 12.1; // WCP steer ratio remains the same
+            public static final double angleGearRatio = 1; // WCP steer ratio remains the same
             
             public static final InvertedValue angleMotorInvert = InvertedValue.CounterClockwise_Positive;
             public static final InvertedValue driveMotorInvert = InvertedValue.CounterClockwise_Positive;
