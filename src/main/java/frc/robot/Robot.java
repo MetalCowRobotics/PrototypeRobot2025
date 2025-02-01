@@ -130,7 +130,7 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopPeriodic() {
     try {
-      s_Swerve.teleopSwerve(
+      s_Swerve.periodic(
           () -> -driver.getRawAxis(translationAxis), 
           () -> -driver.getRawAxis(strafeAxis), 
           () -> -driver.getRawAxis(rotationAxis), 
