@@ -28,7 +28,7 @@ public final class CTREConfigs {
 
         /* Gear Ratio and Wrapping Config */
         swerveAngleFXConfig0.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.RemoteCANcoder;
-        swerveAngleFXConfig0.Feedback.FeedbackRemoteSensorID = 3;
+        swerveAngleFXConfig0.Feedback.FeedbackRemoteSensorID = 2;
         swerveAngleFXConfig0.Feedback.SensorToMechanismRatio = Constants.Swerve.angleGearRatio;
         swerveAngleFXConfig0.ClosedLoopGeneral.ContinuousWrap = true;
         
@@ -50,7 +50,7 @@ public final class CTREConfigs {
 
         /* Gear Ratio and Wrapping Config */
         swerveAngleFXConfig1.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.RemoteCANcoder;
-        swerveAngleFXConfig1.Feedback.FeedbackRemoteSensorID = 6;
+        swerveAngleFXConfig1.Feedback.FeedbackRemoteSensorID = 5;
         swerveAngleFXConfig1.Feedback.SensorToMechanismRatio = Constants.Swerve.angleGearRatio;
         swerveAngleFXConfig1.ClosedLoopGeneral.ContinuousWrap = true;
         
@@ -72,7 +72,7 @@ public final class CTREConfigs {
 
         /* Gear Ratio and Wrapping Config */
         swerveAngleFXConfig2.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.RemoteCANcoder;
-        swerveAngleFXConfig2.Feedback.FeedbackRemoteSensorID = 9;
+        swerveAngleFXConfig2.Feedback.FeedbackRemoteSensorID = 8;
         swerveAngleFXConfig2.Feedback.SensorToMechanismRatio = Constants.Swerve.angleGearRatio;
         swerveAngleFXConfig2.ClosedLoopGeneral.ContinuousWrap = true;
         
@@ -94,7 +94,7 @@ public final class CTREConfigs {
 
         /* Gear Ratio and Wrapping Config */
         swerveAngleFXConfig3.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.RemoteCANcoder;
-        swerveAngleFXConfig3.Feedback.FeedbackRemoteSensorID = 12;
+        swerveAngleFXConfig3.Feedback.FeedbackRemoteSensorID = 11;
         swerveAngleFXConfig3.Feedback.SensorToMechanismRatio = Constants.Swerve.angleGearRatio;
         swerveAngleFXConfig3.ClosedLoopGeneral.ContinuousWrap = true;
         
