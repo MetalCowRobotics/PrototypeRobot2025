@@ -134,7 +134,7 @@ public class Robot extends TimedRobot {
         () -> -driver.getRawAxis(translationAxis), 
         () -> -driver.getRawAxis(strafeAxis), 
         () -> -driver.getRawAxis(rotationAxis), 
-        () -> false
+        () -> true
       );
     } catch (Exception e) {
       System.out.println("Error in teleopPeriodic: " + e.getMessage());
