@@ -61,7 +61,7 @@ public class Robot extends TimedRobot {
     MCRCommand autoMission;
 
     /* Subsystems */
-    // private final Swerve s_Swerve = new Swerve();
+    private final Swerve s_Swerve = new Swerve();
 
     /* autos */
     MCRCommand twoNoteCenter;
@@ -125,15 +125,13 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during operator control. */
   @Override
   public void teleopPeriodic() {
-    // System.out.println(s_Swerve.getTotalDist());
-
-    // callPeriodic();
-    // s_Swerve.periodic(
-    //   () -> -driver.getRawAxis(translationAxis), 
-    //   () -> -driver.getRawAxis(strafeAxis), 
-    //   () -> -driver.getRawAxis(rotationAxis), 
-    //   () -> false /* Never Robot-Oriented */
-    // );
+    // Uncomment and modify the swerve control
+    s_Swerve.periodic(
+        () -> -driver.getRawAxis(translationAxis), 
+        () -> -driver.getRawAxis(strafeAxis), 
+        () -> -driver.getRawAxis(rotationAxis), 
+        () -> false // Robot-oriented control disabled - field oriented control enabled
+    );
   }
 
   @Override
