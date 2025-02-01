@@ -131,10 +131,10 @@ public class Robot extends TimedRobot {
   public void teleopPeriodic() {
     try {
       s_Swerve.teleopSwerve(
-        () -> -driver.getRawAxis(translationAxis), 
-        () -> -driver.getRawAxis(strafeAxis), 
-        () -> -driver.getRawAxis(rotationAxis), 
-        () -> true
+          () -> -driver.getRawAxis(translationAxis), 
+          () -> -driver.getRawAxis(strafeAxis), 
+          () -> -driver.getRawAxis(rotationAxis), 
+          () -> true
       );
     } catch (Exception e) {
       System.out.println("Error in teleopPeriodic: " + e.getMessage());

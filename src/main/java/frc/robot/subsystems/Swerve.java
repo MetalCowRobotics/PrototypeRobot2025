@@ -9,7 +9,6 @@ import frc.robot.LimelightHelpers;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import com.pathplanner.lib.config.PIDConstants;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
-import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
@@ -75,7 +74,12 @@ public class Swerve implements Subsystem{
             new SwerveModule(3, Constants.Swerve.Mod3.constants)
         };
 
-        swervePoseEstimator = new SwerveDrivePoseEstimator(Constants.Swerve.swerveKinematics, getGyroYaw(), getModulePositions(), new Pose2d());
+        swervePoseEstimator = new SwerveDrivePoseEstimator(
+            Constants.Swerve.swerveKinematics,
+            getGyroYaw(),
+            getModulePositions(),
+            new Pose2d()
+        );
 
         try{
             RobotConfig config = RobotConfig.fromGUISettings();
