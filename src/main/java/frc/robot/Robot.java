@@ -10,6 +10,7 @@ import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
@@ -131,14 +132,17 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopPeriodic() {
     try {
-      s_Swerve.periodic(
-          () -> -driver.getRawAxis(translationAxis), 
-          () -> -driver.getRawAxis(strafeAxis), 
-          () -> -driver.getRawAxis(rotationAxis), 
-          () -> false  // Set to false for field-oriented control
+      // Always use field-oriented control
+      s_Swerve.drive(
+        new Translation2d(
+          -driver.getRawAxis(translationAxis), 
+          -driver.getRawAxis(strafeAxis)
+        ).times(Constants.Swerve.maxSpeed),
+        -driver.getRawAxis(rotationAxis) * Constants.Swerve.maxAngularVelocity,
+        true,  // Always field oriented
+        false  // Closed loop
       );
       
-      // Add zero gyro button functionality
       if (zeroGyro.getAsBoolean()) {
         s_Swerve.zeroGyro();
       }
