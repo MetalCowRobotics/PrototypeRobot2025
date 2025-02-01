@@ -138,6 +138,7 @@ public class Robot extends TimedRobot {
       );
     } catch (Exception e) {
       System.out.println("Error in teleopPeriodic: " + e.getMessage());
+      e.printStackTrace();
     }
   }
 
