@@ -39,7 +39,7 @@ public class Robot extends TimedRobot {
 
     /* Controllers */
     private final Joystick driver = new Joystick(0);
-    private final XboxController operator = new XboxController(0);
+    private final XboxController operator = new XboxController(1);
 
     /* Drive Controls */
     private final int translationAxis = XboxController.Axis.kLeftY.value;
@@ -61,7 +61,7 @@ public class Robot extends TimedRobot {
     MCRCommand autoMission;
 
     /* Subsystems */
-    private final Swerve s_Swerve = new Swerve();
+    private final Swerve s_Swerve;
 
     /* autos */
     MCRCommand twoNoteCenter;
@@ -75,6 +75,10 @@ public class Robot extends TimedRobot {
 //38 container
 //84 swerve
  
+  public Robot() {
+    s_Swerve = new Swerve();
+  }
+
   @Override
   public void robotInit() {
     m_robotContainer = new RobotContainer();
@@ -125,13 +129,16 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during operator control. */
   @Override
   public void teleopPeriodic() {
-    // Uncomment and modify the swerve control
-    s_Swerve.periodic(
+    try {
+      s_Swerve.periodic(
         () -> -driver.getRawAxis(translationAxis), 
         () -> -driver.getRawAxis(strafeAxis), 
         () -> -driver.getRawAxis(rotationAxis), 
-        () -> false // Robot-oriented control disabled - field oriented control enabled
-    );
+        () -> false
+      );
+    } catch (Exception e) {
+      System.out.println("Error in teleopPeriodic: " + e.getMessage());
+    }
   }
 
   @Override
