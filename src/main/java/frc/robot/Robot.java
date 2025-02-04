@@ -62,8 +62,8 @@ public class Robot extends TimedRobot {
 
     /* Subsystems */
     // private final Swerve s_Swerve = new Swerve();
-    private final IntakeSubsystem m_IntakeSubsystem = IntakeSubsystem.getInstance();
-    private final NoteTransitSubsystem m_NoteTransitSubsystem = NoteTransitSubsystem.getInstance();
+    // private final IntakeSubsystem m_IntakeSubsystem = IntakeSubsystem.getInstance();
+    // private final NoteTransitSubsystem m_NoteTransitSubsystem = NoteTransitSubsystem.getInstance();
 
     /* autos */
     MCRCommand twoNoteCenter;
@@ -80,7 +80,8 @@ public class Robot extends TimedRobot {
   @Override
   public void robotInit() {
     m_robotContainer = new RobotContainer();
-
+    climb = new Climb();
+    // climb.zeroEncoder();
   }
 
   @Override
@@ -116,9 +117,13 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopInit() {
-
+    // driver.getRawButton(XboxController.Button.kX.value).onTrue(climb.setTargetLocation(climb.kFeederStation));
+    // driver.getRawButton(XboxController.Button.kB.value).onTrue(climb.setTargetLocation(20));
+    // driver.button(XboxController.Button.kY.value).onTrue(climb.setTargetLocation(0));
+    // climb.setTargetLocation(40);
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
+
     }
  
     // s_Swerve.zeroGyro();
@@ -127,6 +132,13 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during operator control. */
   @Override
   public void teleopPeriodic() {
+    if (driver.getRawButton(XboxController.Button.kX.value)) {
+      climb.setTargetLocation(climb.kFeederStation);
+   }
+    if (driver.getRawButton(XboxController.Button.kY.value)) {
+      climb.setTargetLocation(0);
+    }
+    climb.periodic();
     // System.out.println(s_Swerve.getTotalDist());
 
     // callPeriodic();
@@ -149,4 +161,8 @@ public class Robot extends TimedRobot {
   public void callPeriodic(){
 
   }
+  private Climb climb;
+ 
 }
+
+
