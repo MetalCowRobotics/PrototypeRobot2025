@@ -202,4 +202,11 @@ public final class Constants {
     }
     public static double targetPositionTolerance = 0.1;
     public static double targetAngleTolerance = 3;
+    public static final double L1_Distance = 5;
+    public static final double L2_Distance = 15;
+    public static final double L3_Distance = 25;
+    public static final double L4_Distance = 73;
+    public static final double resetPos = 0;
+    // public static final double processor_DISTANCE = 5;
+    // public static final double restposition = 1.7;
 }

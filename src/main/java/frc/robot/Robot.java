@@ -133,9 +133,18 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopPeriodic() {
     if (driver.getRawButton(XboxController.Button.kX.value)) {
-      climb.setTargetLocation(climb.kFeederStation);
+      climb.setTargetLocation(Constants.L1_Distance);
    }
-    if (driver.getRawButton(XboxController.Button.kY.value)) {
+   if (driver.getRawButton(XboxController.Button.kY.value)) {
+    climb.setTargetLocation(Constants.L2_Distance);
+   }
+   if (driver.getRawButton(XboxController.Button.kB.value)) {
+    climb.setTargetLocation(Constants.L3_Distance);
+  }
+   if (driver.getRawButton(XboxController.Button.kA.value)) {
+    climb.setTargetLocation(Constants.L4_Distance);
+  }
+    if (driver.getRawButton(XboxController.Button.kRightBumper.value)) {
       climb.setTargetLocation(0);
     }
     climb.periodic();

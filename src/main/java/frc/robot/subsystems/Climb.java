@@ -16,20 +16,20 @@ import com.revrobotics.spark.config.SparkMaxConfig;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.robot.subsystems.config.Configs;
+//import frc.robot.subsystems.config.Configs;
+import frc.robot.Constants;
 
 
 public class Climb {
-    private double defaultMotorSpeed = 0.1;
-    public double kFeederStation = 20;
+    private double defaultMotorSpeed = 0.25;
+    //public double kFeederStation = 20;
     private double motorSpeed = defaultMotorSpeed; 
     private double targetLocation = 0;
     
-    private SparkMax climbMotor = new SparkMax(19, MotorType.kBrushless);
-    private SparkClosedLoopController elevatorClosedLoopController =
-      climbMotor.getClosedLoopController();
-    private DigitalInput BottomSwitch = new DigitalInput(3);
-    private DigitalInput TopSwitch = new DigitalInput(2);
+    private SparkMax climbMotor = new SparkMax(21, MotorType.kBrushless);
+    private SparkClosedLoopController elevatorClosedLoopController = climbMotor.getClosedLoopController();
+    private DigitalInput BottomSwitch = new DigitalInput(2);
+    private DigitalInput TopSwitch = new DigitalInput(3);
 
     public Climb() {
         SparkMaxConfig config = new SparkMaxConfig();
@@ -55,19 +55,26 @@ public class Climb {
           .closedLoop
           .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
           // Set PID values for position control
-          .p(0.1)
-          .outputRange(-1, 1)
+          .p(0.15)
+          .d(0.01)
+          .outputRange(-0.5, 0.5)
           .maxMotion
           // Set MAXMotion parameters for position control
-          .maxVelocity(2100)
-          .maxAcceleration(3000)
+          .maxVelocity(3500)
+          .maxAcceleration(4000)
           .allowedClosedLoopError(1);
 
         climbMotor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
         zeroEncoder();
     }
     public void periodic() {
-        pushValue();
+        if(BottomSwitch.get()){
+            pushValue();
+        }
+        if (!BottomSwitch.get()){
+            motorSpeed = 0;
+        }
+        
         // if (!BottomSwitch.get()) {
         //     zeroEncoder();    
         // } 
@@ -101,10 +108,27 @@ public class Climb {
         SmartDashboard.putNumber("Target Location", targetLocation);
         SmartDashboard.putBoolean("Bottom Switch", BottomSwitch.get());
         SmartDashboard.putBoolean("Top Switch", TopSwitch.get());
+        
     }   
     public void zeroEncoder(){
         climbMotor.getEncoder().setPosition(0);
     }
+   public void L1_Distance(){
+    targetLocation = Constants.L1_Distance;
+   }
+
+   public void L2_Distance(){
+    targetLocation = Constants.L2_Distance;
+   }
+
+   public void L3_Distance(){
+    targetLocation = Constants.L3_Distance;
+   }
+
+   public void L4_Distance(){
+    targetLocation = Constants.L4_Distance;
+   }
+   //Equation = encoder1.GetPosition * (130.1247*(1/15)/42)
 }
 
 
