@@ -64,6 +64,7 @@ public class Robot extends TimedRobot {
     // private final Swerve s_Swerve = new Swerve();
     // private final IntakeSubsystem m_IntakeSubsystem = IntakeSubsystem.getInstance();
     // private final NoteTransitSubsystem m_NoteTransitSubsystem = NoteTransitSubsystem.getInstance();
+    private final ElevatorSubsystem elevatorSubsystem = new ElevatorSubsystem();
 
     /* autos */
     MCRCommand twoNoteCenter;
@@ -80,8 +81,8 @@ public class Robot extends TimedRobot {
   @Override
   public void robotInit() {
     m_robotContainer = new RobotContainer();
-    climb = new Climb();
     // climb.zeroEncoder();
+
   }
 
   @Override
@@ -133,21 +134,21 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopPeriodic() {
     if (driver.getRawButton(XboxController.Button.kX.value)) {
-      climb.setTargetLocation(Constants.L1_Distance);
+      elevatorSubsystem.setTargetLocation(Constants.L1_Distance);
    }
    if (driver.getRawButton(XboxController.Button.kY.value)) {
-    climb.setTargetLocation(Constants.L2_Distance);
+    elevatorSubsystem.setTargetLocation(Constants.L2_Distance);
    }
    if (driver.getRawButton(XboxController.Button.kB.value)) {
-    climb.setTargetLocation(Constants.L3_Distance);
+    elevatorSubsystem.setTargetLocation(Constants.L3_Distance);
   }
    if (driver.getRawButton(XboxController.Button.kA.value)) {
-    climb.setTargetLocation(Constants.L4_Distance);
+    elevatorSubsystem.setTargetLocation(Constants.L4_Distance);
   }
     if (driver.getRawButton(XboxController.Button.kRightBumper.value)) {
-      climb.setTargetLocation(0);
+      elevatorSubsystem.setTargetLocation(0);
     }
-    climb.periodic();
+    elevatorSubsystem.periodic();
     // System.out.println(s_Swerve.getTotalDist());
 
     // callPeriodic();
@@ -170,8 +171,6 @@ public class Robot extends TimedRobot {
   public void callPeriodic(){
 
   }
-  private Climb climb;
- 
 }
 
 

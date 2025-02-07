@@ -20,18 +20,18 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
 
 
-public class Climb {
+public class ElevatorSubsystem {
     private double defaultMotorSpeed = 0.25;
     //public double kFeederStation = 20;
     private double motorSpeed = defaultMotorSpeed; 
     private double targetLocation = 0;
     
-    private SparkMax climbMotor = new SparkMax(21, MotorType.kBrushless);
-    private SparkClosedLoopController elevatorClosedLoopController = climbMotor.getClosedLoopController();
+    private SparkMax ElevatorMotor = new SparkMax(21, MotorType.kBrushless);
+    private SparkClosedLoopController elevatorClosedLoopController = ElevatorMotor.getClosedLoopController();
     private DigitalInput BottomSwitch = new DigitalInput(2);
     private DigitalInput TopSwitch = new DigitalInput(3);
 
-    public Climb() {
+    public ElevatorSubsystem() {
         SparkMaxConfig config = new SparkMaxConfig();
         config
             .inverted(true);
@@ -60,11 +60,11 @@ public class Climb {
           .outputRange(-0.5, 0.5)
           .maxMotion
           // Set MAXMotion parameters for position control
-          .maxVelocity(3500)
+          .maxVelocity(4200)
           .maxAcceleration(4000)
-          .allowedClosedLoopError(1);
+          .allowedClosedLoopError(0.25);
 
-        climbMotor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+        ElevatorMotor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
         zeroEncoder();
     }
     public void periodic() {
@@ -95,7 +95,7 @@ public class Climb {
         
     }
     private double getPosition() {
-        return climbMotor.getEncoder().getPosition();
+        return ElevatorMotor.getEncoder().getPosition();
     }   
     public void setTargetLocation(double targetLocation) {
         this.targetLocation = targetLocation;
@@ -111,7 +111,7 @@ public class Climb {
         
     }   
     public void zeroEncoder(){
-        climbMotor.getEncoder().setPosition(0);
+        ElevatorMotor.getEncoder().setPosition(0);
     }
    public void L1_Distance(){
     targetLocation = Constants.L1_Distance;
