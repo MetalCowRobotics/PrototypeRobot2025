@@ -64,6 +64,7 @@ public class Robot extends TimedRobot {
     // private final Swerve s_Swerve = new Swerve();
     private final IntakeSubsystem m_IntakeSubsystem = IntakeSubsystem.getInstance();
     private final NoteTransitSubsystem m_NoteTransitSubsystem = NoteTransitSubsystem.getInstance();
+    private final ClimberSubsystem climberSubsystem = new ClimberSubsystem();
 
     /* autos */
     MCRCommand twoNoteCenter;
@@ -136,6 +137,9 @@ public class Robot extends TimedRobot {
     //   () -> -driver.getRawAxis(rotationAxis), 
     //   () -> false /* Never Robot-Oriented */
     // );
+    if (operator.getRawButton(XboxController.Button.kLeftBumper.value)) {
+      climberSubsystem.runClimber();
+     }
   }
 
   @Override
