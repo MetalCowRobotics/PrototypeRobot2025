@@ -5,7 +5,6 @@ import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.SparkClosedLoopController;
-import com.revrobotics.spark.SparkLimitSwitch;
 import com.revrobotics.spark.SparkLowLevel;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
@@ -17,22 +16,22 @@ import com.revrobotics.spark.config.SparkMaxConfig;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-//import frc.robot.subsystems.config.Configs;
-import frc.robot.Constants;
+import frc.robot.subsystems.config.Configs;
 
 
-public class ElevatorSubsystem {
-    private double defaultMotorSpeed = 0.25;
-    //public double kFeederStation = 20;
+public class climb {
+    private double defaultMotorSpeed = 0.1;
+    public double kFeederStation = 20;
     private double motorSpeed = defaultMotorSpeed; 
     private double targetLocation = 0;
     
-    private SparkMax ElevatorMotor = new SparkMax(19, MotorType.kBrushless);
-    private SparkClosedLoopController elevatorClosedLoopController = ElevatorMotor.getClosedLoopController();
-    private SparkLimitSwitch BottomSwitch = ElevatorMotor.getReverseLimitSwitch();
-    private SparkLimitSwitch TopSwitch = ElevatorMotor.getForwardLimitSwitch();
+    private SparkMax climbMotor = new SparkMax(19, MotorType.kBrushless);
+    private SparkClosedLoopController elevatorClosedLoopController =
+      climbMotor.getClosedLoopController();
+    private DigitalInput BottomSwitch = new DigitalInput(3);
+    private DigitalInput TopSwitch = new DigitalInput(2);
 
-    public ElevatorSubsystem() {
+    public climb() {
         SparkMaxConfig config = new SparkMaxConfig();
         config
             .inverted(true);
@@ -46,9 +45,7 @@ public class ElevatorSubsystem {
       config
           .limitSwitch
           .reverseLimitSwitchEnabled(true)
-          .reverseLimitSwitchType(Type.kNormallyOpen)
-          .forwardLimitSwitchEnabled(true)
-          .forwardLimitSwitchType(Type.kNormallyOpen);
+          .reverseLimitSwitchType(Type.kNormallyOpen);
 
       /*
        * Configure the closed loop controller. We want to make sure we set the
@@ -58,22 +55,19 @@ public class ElevatorSubsystem {
           .closedLoop
           .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
           // Set PID values for position control
-          .p(0.15)
-          .d(0.01)
-          .outputRange(-0.5, 0.5)
+          .p(0.1)
+          .outputRange(-1, 1)
           .maxMotion
           // Set MAXMotion parameters for position control
-          .maxVelocity(4200)
-          .maxAcceleration(4000)
-          .allowedClosedLoopError(0.25);
+          .maxVelocity(2100)
+          .maxAcceleration(3000)
+          .allowedClosedLoopError(1);
 
-        ElevatorMotor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+        climbMotor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
         zeroEncoder();
     }
     public void periodic() {
         pushValue();
-
-        
         // if (!BottomSwitch.get()) {
         //     zeroEncoder();    
         // } 
@@ -94,7 +88,7 @@ public class ElevatorSubsystem {
         
     }
     private double getPosition() {
-        return ElevatorMotor.getEncoder().getPosition();
+        return climbMotor.getEncoder().getPosition();
     }   
     public void setTargetLocation(double targetLocation) {
         this.targetLocation = targetLocation;
@@ -105,29 +99,12 @@ public class ElevatorSubsystem {
         SmartDashboard.putNumber("Climb Motor Speed", motorSpeed);
         SmartDashboard.putNumber("Encoder Reading", getPosition());
         SmartDashboard.putNumber("Target Location", targetLocation);
-        SmartDashboard.putBoolean("Bottom Switch", BottomSwitch.isPressed());
-        SmartDashboard.putBoolean("Top Switch", TopSwitch.isPressed());
-        
+        SmartDashboard.putBoolean("Bottom Switch", BottomSwitch.get());
+        SmartDashboard.putBoolean("Top Switch", TopSwitch.get());
     }   
     public void zeroEncoder(){
-        ElevatorMotor.getEncoder().setPosition(0);
+        climbMotor.getEncoder().setPosition(0);
     }
-   public void L1_Distance(){
-    targetLocation = Constants.L1_Distance;
-   }
-
-   public void L2_Distance(){
-    targetLocation = Constants.L2_Distance;
-   }
-
-   public void L3_Distance(){
-    targetLocation = Constants.L3_Distance;
-   }
-
-   public void L4_Distance(){
-    targetLocation = Constants.L4_Distance;
-   }
-   //Equation = encoder1.GetPosition * (130.1247*(1/15)/42)
 }
 
 
