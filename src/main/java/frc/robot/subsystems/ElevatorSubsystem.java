@@ -27,7 +27,7 @@ public class ElevatorSubsystem {
     private double motorSpeed = defaultMotorSpeed; 
     private double targetLocation = 0;
     
-    private SparkMax ElevatorMotor = new SparkMax(19, MotorType.kBrushless);
+    private SparkMax ElevatorMotor = new SparkMax(21, MotorType.kBrushless);
     private SparkClosedLoopController elevatorClosedLoopController = ElevatorMotor.getClosedLoopController();
     private SparkLimitSwitch BottomSwitch = ElevatorMotor.getReverseLimitSwitch();
     private SparkLimitSwitch TopSwitch = ElevatorMotor.getForwardLimitSwitch();
