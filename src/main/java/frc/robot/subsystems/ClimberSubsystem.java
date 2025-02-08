@@ -66,7 +66,7 @@ import com.revrobotics.spark.config.SparkMaxConfig;
         public void runClimber(){
             if (boreRawValue < targetLocation - .5) {
                 climberMotor.set(speed);
-            }
+            }   
             else if(boreRawValue > targetLocation + .5) {
                 climberMotor.set(-speed);
             }
@@ -79,9 +79,6 @@ import com.revrobotics.spark.config.SparkMaxConfig;
             boreConvertedOffsetValue = (boreConvertedValue - 106.084371);
             writeStatus();
         }
-
-
-
         private void writeStatus() {
         SmartDashboard.putNumber("boreConvertedOffsetValue",boreConvertedOffsetValue);
         SmartDashboard.putNumber("boreConvertedValue",boreConvertedValue);
