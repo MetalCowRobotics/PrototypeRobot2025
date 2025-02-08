@@ -21,7 +21,7 @@ import com.revrobotics.spark.config.SparkMaxConfig;
         private DutyCycleEncoder boreEncoder = new DutyCycleEncoder(boreInput);
         private double boreRawValue, boreConvertedValue, boreConvertedOffsetValue;
         private double speed = 0.025;
-        private double targetLocation = 0.25;
+        private double targetLocation = 0/100;
         
         
 
