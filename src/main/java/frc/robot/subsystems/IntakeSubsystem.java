@@ -16,8 +16,8 @@ public class IntakeSubsystem {
     private SparkMax intakeMotor;
     private boolean intakeEnabled;
     private double speed = 0;
-    private double pickUpSpeed = -0.8;
-    private double holdSpeed = -0.07;
+    private double pickUpSpeed = -0.6;
+    private double holdSpeed = -0.05;
     private DigitalInput intakeSensor;
     private boolean alreadyStopped;
 
@@ -28,7 +28,7 @@ public class IntakeSubsystem {
         config.idleMode(SparkBaseConfig.IdleMode.kBrake);
         intakeSensor = new DigitalInput(1);
         config.inverted(true);
-        config.smartCurrentLimit(20);
+        config.smartCurrentLimit(15);
         intakeMotor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
         alreadyStopped = false;
         SmartDashboard.putBoolean("Intake Enabled", intakeEnabled);
@@ -39,7 +39,6 @@ public class IntakeSubsystem {
     }
 
     public void periodic(){
-
         if(algaeAcquired()){
             intakeMotor.set(holdSpeed);
         }
@@ -47,10 +46,6 @@ public class IntakeSubsystem {
         if(!algaeAcquired()){
             intakeMotor.set(speed);
         }
-
-        
-
-
 
         SmartDashboard.putBoolean("Intake Enabled", intakeEnabled);
         SmartDashboard.putNumber("IntakeSpeed", speed);
@@ -68,7 +63,6 @@ public class IntakeSubsystem {
     }
 
     public void stopIntake(){
-
         if(algaeAcquired()){
             releaseAlgae();
         }
@@ -79,7 +73,6 @@ public class IntakeSubsystem {
     }
 
     public void releaseAlgae(){
-
         intakeMotor.set(1);
 
         if(!algaeAcquired()){
@@ -88,9 +81,6 @@ public class IntakeSubsystem {
         }else{
             releaseAlgae();
         }
-
-
-        
     }
 
     public void startIntakeReverse(){
