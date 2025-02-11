@@ -138,15 +138,14 @@ public class Robot extends TimedRobot {
     //   () -> false /* Never Robot-Oriented */
     // );
     if (operator.getRawButton(XboxController.Button.kLeftBumper.value)) {
-      
-      climberSubsystem.runClimber();
-      climberSubsystem.setTargetLocation(0.25);
+      climberSubsystem.HarpoonIn();
+      // climberSubsystem.runClimber();
      }
      if (operator.getRawButton(XboxController.Button.kRightBumper.value)) {
-      
-      climberSubsystem.runClimber();
-      climberSubsystem.setTargetLocation(0.75);
+      climberSubsystem.HarpoonOut();
+      // climberSubsystem.runClimber();
      }
+     climberSubsystem.periodic();
   }
 
   @Override
