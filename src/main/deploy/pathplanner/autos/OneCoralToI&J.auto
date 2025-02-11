@@ -5,15 +5,9 @@
     "data": {
       "commands": [
         {
-          "type": "parallel",
-          "data": {
-            "commands": []
-          }
-        },
-        {
           "type": "path",
           "data": {
-            "pathName": "Straight Back Test"
+            "pathName": "OneCoralToI&J"
           }
         }
       ]
