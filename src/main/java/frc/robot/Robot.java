@@ -4,32 +4,23 @@
 
 package frc.robot;
 
-import com.pathplanner.lib.auto.AutoBuilder;
-import com.pathplanner.lib.config.PIDConstants;
-import com.pathplanner.lib.config.RobotConfig;
-import com.pathplanner.lib.controllers.PPHolonomicDriveController;
-
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-
 import frc.lib14.MCRCommand;
-import frc.robot.subsystems.*;
+import frc.robot.subsystems.ElevatorSubsystem;
 /*
  * The VM is configured to automatically run this class, and to call the functions corresponding to
  * each mode, as described in the TimedRobot documentation. If you change the name of this class or
  * the package after creating this project, you must also update the build.gradle file in the
  * project.
  */
+import frc.robot.subsystems.ElevatorSubsystem;
 
 public class Robot extends TimedRobot {
     public static final CTREConfigs ctreConfigs = new CTREConfigs();
@@ -133,7 +124,7 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during operator control. */
   @Override
   public void teleopPeriodic() {
-    if (driver.getRawButton(XboxController.Button.kX.value)) {
+    if (driver.getRawButton(XboxController.Button.kLeftBumper.value)) {
       elevatorSubsystem.setTargetLocation(Constants.L1_Distance);
    }
    if (driver.getRawButton(XboxController.Button.kY.value)) {
@@ -147,8 +138,12 @@ public class Robot extends TimedRobot {
   }
     if (driver.getRawButton(XboxController.Button.kRightBumper.value)) {
       elevatorSubsystem.setTargetLocation(0);
+  }
+ 
+
+  elevatorSubsystem.periodic();
+
     }
-    elevatorSubsystem.periodic();
     // System.out.println(s_Swerve.getTotalDist());
 
     // callPeriodic();

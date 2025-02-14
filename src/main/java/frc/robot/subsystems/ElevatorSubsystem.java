@@ -127,6 +127,12 @@ public class ElevatorSubsystem {
    public void L4_Distance(){
     targetLocation = Constants.L4_Distance;
    }
+    public void FeederStation(){
+     targetLocation = Constants.L1_Distance;
+    }
+  
+   
+
    //Equation = encoder1.GetPosition * (130.1247*(1/15)/42)
 }
 
