@@ -32,6 +32,11 @@ public class ElevatorSubsystem {
     private SparkLimitSwitch BottomSwitch = ElevatorMotor.getReverseLimitSwitch();
     private SparkLimitSwitch TopSwitch = ElevatorMotor.getForwardLimitSwitch();
 
+
+    public static ElevatorSubsystem getInstance(){
+        return getInstance();
+    } 
+
     public ElevatorSubsystem() {
         SparkMaxConfig config = new SparkMaxConfig();
         config

@@ -4,12 +4,15 @@
 
 package frc.robot;
 
+import com.pathplanner.lib.auto.NamedCommands;
+
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.lib14.MCRCommand;
@@ -20,6 +23,7 @@ import frc.lib14.MCRCommand;
  * project.
  */
 import frc.robot.subsystems.ElevatorSubsystem;
+import frc.robot.subsystems.IntakeSubsystem;
 
 public class Robot extends TimedRobot {
     public static final CTREConfigs ctreConfigs = new CTREConfigs();
@@ -71,6 +75,14 @@ public class Robot extends TimedRobot {
   @Override
   public void robotInit() {
     m_robotContainer = new RobotContainer();
+    NamedCommands.registerCommand("SetFeederStation", new InstantCommand(() -> ElevatorSubsystem.L1_Distance()));
+    NamedCommands.registerCommand("SetLevel2", new InstantCommand(() -> ElevatorSubsystem.L2_Distance()));
+    NamedCommands.registerCommand("SetLevel3", new InstantCommand(() -> ElevatorSubsystem.L3_Distance()));
+    NamedCommands.registerCommand("Setlevel4", new InstantCommand(() -> ElevatorSubsystem.L4_Distance()));
+    NamedCommands.registerCommand("RunIntake", new InstantCommand(() -> IntakeSubsystem.startIntake()));
+    NamedCommands.registerCommand("StopIntake", new InstantCommand(() -> IntakeSubsystem.stopIntake()));
+    NamedCommands.registerCommand("SetIntakeScoreLevel2&3", new InstantCommand(() -> ________));
+    NamedCommands.registerCommand("SetIntakeScoreLevel4", new InstantCommand(() -> __________));
     // climb.zeroEncoder();
 
   }
